@@ -144,6 +144,14 @@ whether or not the viewer has the fonts. Inkscape rewrites the whole file,
 so the `GENERATED` comment at the top has to be pasted back afterwards.
 `favicon.svg` is not generated; it has no text in it.
 
+The map on the share card is not a redrawing. Its nine paths were lifted
+verbatim from the live page: `pathFor()` in `index.html` builds them from the
+`GEO` coordinates, and `tools/og.html` embeds the strings it produced, in the
+same 584x835 viewBox. The card therefore shows the same territories in the
+same projection and palette as the site, with Team GB selected. **If the
+geometry in `index.html` changes, re-extract those paths** rather than editing
+them by hand; the header comment in `tools/og.html` says the same thing.
+
 ### Deploying
 
 Wrangler is configured via `wrangler.toml`, so a deploy is one command from
