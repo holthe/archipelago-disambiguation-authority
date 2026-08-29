@@ -55,6 +55,9 @@
   --ui:"Inter",system-ui,-apple-system,sans-serif;
   --disp:"Instrument Serif",Georgia,serif;
   --pad:clamp(16px,4vw,64px);
+  /* the native select popup is drawn by the platform: this is what makes
+     it dark, rather than light text on a white list */
+  color-scheme:dark;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -88,8 +91,12 @@ h1 i{font-style:italic;color:var(--a)}
 .sub b{color:var(--text);font-weight:600}
 
 /* ---------- map stage ---------- */
+/* No clipping here: the sea and its rings are inset -22% horizontally and
+   are meant to bleed past the stage. Clipping them cut a hard vertical
+   edge through the gradient on narrow screens. The body already clips
+   the x axis, so nothing can scroll sideways. */
 .stage{
-  position:relative;z-index:1;overflow-x:clip;width:100%;max-width:940px;margin:clamp(8px,2vw,20px) auto 0;
+  position:relative;z-index:1;width:100%;max-width:940px;margin:clamp(8px,2vw,20px) auto 0;
   aspect-ratio:1/.80;perspective:1700px;perspective-origin:50% 44%;
 }
 .board{
@@ -260,6 +267,39 @@ select{
   background-size:5px 5px,5px 5px;background-repeat:no-repeat;
 }
 select:focus-visible{outline:2px solid var(--a);outline-offset:3px}
+option{background:var(--deep-2);color:var(--text)}
+
+/* ---------- dropdown (pointer devices only; touch keeps the native select) ---------- */
+.dd{position:relative}
+.dd-native{position:absolute!important;width:1px;height:1px;padding:0;margin:0;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;opacity:0;pointer-events:none}
+.dd-btn{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;
+  font-family:var(--ui);font-size:16.5px;font-weight:500;text-align:left;
+  color:var(--text);background:rgba(var(--bone-rgb),.05);
+  border:1px solid var(--line);border-radius:8px;
+  padding:8px 14px;cursor:pointer;line-height:1.5;
+}
+.dd-btn:hover{background:rgba(var(--bone-rgb),.09);border-color:rgba(var(--bone-rgb),.28)}
+.dd-btn:focus-visible{outline:2px solid var(--a);outline-offset:3px}
+.dd-btn .chev{flex:none;width:9px;height:9px;border-right:1.6px solid var(--dim);
+  border-bottom:1.6px solid var(--dim);transform:rotate(45deg) translate(-2px,-2px);
+  transition:transform .18s ease}
+.dd.open .dd-btn{border-color:var(--a);background:rgba(var(--bone-rgb),.09)}
+.dd.open .dd-btn .chev{transform:rotate(225deg) translate(-3px,-3px);border-color:var(--a)}
+.dd-list{
+  position:fixed;z-index:80;margin:0;padding:6px;list-style:none;
+  background:var(--deep-2);border:1px solid rgba(var(--bone-rgb),.22);border-radius:12px;
+  box-shadow:0 18px 44px rgba(2,10,13,.6);max-height:min(52vh,340px);overflow:auto;
+}
+.dd-opt{
+  padding:9px 12px;border-radius:7px;color:var(--text-2);cursor:pointer;
+  font-family:var(--ui);font-size:15.5px;line-height:1.4;
+}
+.dd-opt:hover,.dd-opt.active{background:rgba(var(--bone-rgb),.10);color:var(--text)}
+.dd-opt[aria-selected="true"]{color:var(--a)}
+.dd-opt[aria-selected="true"]:after{content:"\2713";float:right;opacity:.9}
+@media (prefers-reduced-motion: reduce){ .dd-btn .chev{transition:none} }
 
 .finding{
   border-top:1px solid var(--line);padding-top:22px;
@@ -1017,6 +1057,163 @@ oSel.addEventListener("change", ruling);
 cSel.addEventListener("change", ruling);
 ruling();
 })();
+
+/* ---------- dropdowns ----------
+   The native <select> stays in the DOM and stays authoritative: the map sets
+   its value and dispatches change, and this listens for that. On touch the
+   native control is left alone, because the platform picker is better than
+   anything reimplemented here. On pointer devices the select is hidden and
+   driven by a listbox, because a native popup cannot be styled to match a
+   page this dark on every platform.
+   The list is positioned fixed: .reg has overflow:hidden and would clip it. */
+(function(){
+  if (!window.matchMedia || !window.matchMedia("(pointer: fine)").matches) return;
+  var open = null;
+
+  Array.prototype.forEach.call(document.querySelectorAll("select"), function(sel){
+    if (!sel.options.length) return;
+
+    var wrap = document.createElement("div");
+    wrap.className = "dd";
+    sel.parentNode.insertBefore(wrap, sel);
+    wrap.appendChild(sel);
+    sel.classList.add("dd-native");
+    sel.setAttribute("tabindex", "-1");
+    sel.setAttribute("aria-hidden", "true");
+
+    var lbl = sel.id ? document.querySelector('label[for="' + sel.id + '"]') : null;
+    if (lbl && !lbl.id) lbl.id = sel.id + "-lbl";
+
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "dd-btn";
+    btn.id = (sel.id || "dd") + "-btn";
+    btn.setAttribute("aria-haspopup", "listbox");
+    btn.setAttribute("aria-expanded", "false");
+    if (lbl) btn.setAttribute("aria-labelledby", lbl.id + " " + btn.id);
+    var txt = document.createElement("span");
+    var chev = document.createElement("span");
+    chev.className = "chev";
+    chev.setAttribute("aria-hidden", "true");
+    btn.appendChild(txt); btn.appendChild(chev);
+
+    var list = document.createElement("ul");
+    list.className = "dd-list";
+    list.setAttribute("role", "listbox");
+    list.id = (sel.id || "dd") + "-list";
+    list.hidden = true;
+    if (lbl) list.setAttribute("aria-labelledby", lbl.id);
+
+    wrap.appendChild(btn);
+    document.body.appendChild(list);
+
+    var opts = [];
+    function build(){
+      list.innerHTML = "";
+      opts = [];
+      Array.prototype.forEach.call(sel.options, function(o, i){
+        var li = document.createElement("li");
+        li.className = "dd-opt";
+        li.id = list.id + "-o" + i;
+        li.setAttribute("role", "option");
+        li.textContent = o.textContent;
+        li.setAttribute("aria-selected", o.selected ? "true" : "false");
+        li.addEventListener("click", function(){ commit(i); });
+        li.addEventListener("mousemove", function(){ mark(i); });
+        list.appendChild(li);
+        opts.push(li);
+      });
+    }
+    var active = 0;
+    function mark(i){
+      if (i < 0 || i >= opts.length) return;
+      if (opts[active]) opts[active].classList.remove("active");
+      active = i;
+      opts[active].classList.add("active");
+      list.setAttribute("aria-activedescendant", opts[active].id);
+    }
+    function sync(){
+      txt.textContent = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].textContent : "";
+      opts.forEach(function(li, i){ li.setAttribute("aria-selected", i === sel.selectedIndex ? "true" : "false"); });
+    }
+    function place(){
+      var r = btn.getBoundingClientRect();
+      list.style.left = r.left + "px";
+      list.style.width = Math.max(r.width, 200) + "px";
+      list.hidden = false;                       /* measure with it laid out */
+      var h = list.offsetHeight;
+      var below = window.innerHeight - r.bottom - 12;
+      list.style.top = (below >= h || below >= r.top ? r.bottom + 6 : r.top - h - 6) + "px";
+    }
+    function show(){
+      if (open && open !== close) open();
+      build(); sync(); place();
+      wrap.classList.add("open");
+      btn.setAttribute("aria-expanded", "true");
+      btn.setAttribute("aria-controls", list.id);
+      mark(sel.selectedIndex < 0 ? 0 : sel.selectedIndex);
+      if (opts[active]) opts[active].scrollIntoView({block:"nearest"});
+      open = close;
+      document.addEventListener("mousedown", outside, true);
+      window.addEventListener("resize", close);
+      window.addEventListener("scroll", onScroll, true);
+    }
+    function close(){
+      list.hidden = true;
+      wrap.classList.remove("open");
+      btn.setAttribute("aria-expanded", "false");
+      btn.removeAttribute("aria-controls");
+      open = null;
+      document.removeEventListener("mousedown", outside, true);
+      window.removeEventListener("resize", close);
+      window.removeEventListener("scroll", onScroll, true);
+    }
+    function outside(e){
+      if (!list.contains(e.target) && !btn.contains(e.target)) close();
+    }
+    /* the page scrolling should close the list, but the list scrolling its own
+       overflow should not: capture-phase scroll sees both */
+    function onScroll(e){
+      if (list.contains(e.target)) return;
+      close();
+    }
+    function commit(i){
+      sel.selectedIndex = i;
+      sel.dispatchEvent(new Event("change", {bubbles:true}));
+      sync(); close(); btn.focus();
+    }
+
+    btn.addEventListener("click", function(){ list.hidden ? show() : close(); });
+    btn.addEventListener("keydown", function(e){
+      var k = e.key;
+      if (list.hidden){
+        if (k === "ArrowDown" || k === "ArrowUp" || k === "Enter" || k === " " || k === "Spacebar"){
+          e.preventDefault(); show();
+        }
+        return;
+      }
+      if (k === "ArrowDown"){ e.preventDefault(); mark(Math.min(active + 1, opts.length - 1)); opts[active].scrollIntoView({block:"nearest"}); }
+      else if (k === "ArrowUp"){ e.preventDefault(); mark(Math.max(active - 1, 0)); opts[active].scrollIntoView({block:"nearest"}); }
+      else if (k === "Home"){ e.preventDefault(); mark(0); opts[active].scrollIntoView({block:"nearest"}); }
+      else if (k === "End"){ e.preventDefault(); mark(opts.length - 1); opts[active].scrollIntoView({block:"nearest"}); }
+      else if (k === "Enter" || k === " " || k === "Spacebar"){ e.preventDefault(); commit(active); }
+      else if (k === "Escape"){ e.preventDefault(); close(); btn.focus(); }
+      else if (k === "Tab"){ close(); }
+      else if (k.length === 1){
+        var ch = k.toLowerCase(), n = opts.length;
+        for (var d = 1; d <= n; d++){
+          var j = (active + d) % n;
+          if (opts[j].textContent.toLowerCase().indexOf(ch) === 0){ mark(j); opts[j].scrollIntoView({block:"nearest"}); break; }
+        }
+      }
+    });
+
+    /* the map and the chips also drive the select; follow it */
+    sel.addEventListener("change", function(){ build(); sync(); });
+    build(); sync();
+  });
+})();
+
 </script>
 </body>
 </html>
