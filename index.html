@@ -354,6 +354,30 @@ th{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:u
 td{color:var(--text-2)}
 td:first-child{color:var(--text);font-weight:600;white-space:nowrap;padding-right:24px}
 
+/* Three columns of prose cannot share a phone: the term is forced nowrap, so
+   the table widens, the two prose columns squeeze to ribbons and the third
+   scrolls out of sight entirely. Below 640px each row becomes a block with
+   its own labels, and nothing scrolls sideways. */
+@media(max-width:640px){
+  #key .scroll{overflow-x:visible}
+  #key table,#key tbody,#key tr,#key td{display:block;width:100%}
+  #key thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  #key tr{border-top:1px solid var(--line);padding:18px 0 20px}
+  #key tr:first-child{border-top:0}
+  #key td{border-bottom:0;padding:0}
+  #key td:first-child{
+    white-space:normal;padding-right:0;font-size:17px;line-height:1.3;
+    color:var(--text);font-weight:600;
+  }
+  #key td:nth-child(2),#key td:nth-child(3){margin-top:12px}
+  #key td:nth-child(2)::before,#key td:nth-child(3)::before{
+    display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--a);font-weight:500;margin-bottom:5px;
+  }
+  #key td:nth-child(2)::before{content:"Covers"}
+  #key td:nth-child(3)::before{content:"Notably excludes"}
+}
+
 .cauts{list-style:none;margin:0;padding:0;counter-reset:c;
   display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:0 46px}
 .cauts li{counter-increment:c;position:relative;padding:15px 0 15px 42px;border-top:1px solid var(--line);color:var(--text-2)}
