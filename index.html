@@ -60,7 +60,12 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+/* The sea is meant to bleed past the stage, so the stage does not clip it.
+   The clipping therefore has to happen at the viewport, and it has to be
+   declared on html as well as body: overflow on body propagates to the
+   viewport only while html is visible, and relying on that left the page
+   scrollable sideways by the width of the bleed. */
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
 body{
   margin:0;background:var(--deep);color:var(--text);
   font-family:var(--ui);font-size:16px;line-height:1.55;
