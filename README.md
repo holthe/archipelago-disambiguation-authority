@@ -210,8 +210,14 @@ record by hand first, because a pre-existing record blocks the flow.
 Universal SSL already covers one level of subdomain on that zone, so the
 certificate needs no extra step.
 
+One trap worth recording: `archipelago.pages.dev` belongs to an unrelated
+project, so Cloudflare assigned this one a suffix and the deployment answers
+on **`archipelago-ffl.pages.dev`**. Any DNS record for it must target that
+hostname, not the project name. The Pages project itself is still called
+`archipelago`.
+
 Until the domain is attached the site is reachable at
-`archipelago.pages.dev`.
+`archipelago-ffl.pages.dev`.
 
 ### Related
 
