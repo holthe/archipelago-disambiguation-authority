@@ -9,7 +9,13 @@
 <!-- PRODUCTION DOMAIN, hardcoded. The Authority has no domain of its own, so
      its canonical host is a subdomain of the parent. If that ever changes,
      edit the four absolute URLs below and the footer of tools/og.html, then
-     re-run `make og`. Those are the only two files that name it. -->
+     re-run `make og`. Those are the only two files that name it.
+
+     The ?v= on the share image is a cache key, not decoration. og.png is
+     served with a seven-day max-age and its path never changes, so a
+     regenerated card is invisible behind the edge cache and behind every
+     social platform's own copy until the URL changes. BUMP ?v= WHENEVER
+     og.png IS REGENERATED. Both URLs below must carry the same value. -->
 <link rel="canonical" href="https://archipelago.besteffortindustries.com/">
 <meta name="theme-color" content="#07161C">
 
@@ -22,7 +28,7 @@
 <meta property="og:url" content="https://archipelago.besteffortindustries.com/">
 <meta property="og:title" content="Archipelago Disambiguation Authority">
 <meta property="og:description" content="Select a boundary. Watch which land rises. Eleven distinct patterns, all of them official.">
-<meta property="og:image" content="https://archipelago.besteffortindustries.com/og.png">
+<meta property="og:image" content="https://archipelago.besteffortindustries.com/og.png?v=2">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -32,7 +38,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Archipelago Disambiguation Authority">
 <meta name="twitter:description" content="Select a boundary. Watch which land rises. Eleven distinct patterns, all of them official.">
-<meta name="twitter:image" content="https://archipelago.besteffortindustries.com/og.png">
+<meta name="twitter:image" content="https://archipelago.besteffortindustries.com/og.png?v=2">
 <meta name="twitter:image:alt" content="The Authority&#39;s chart of the nine territories with Team GB selected: England, Scotland, Wales, Northern Ireland, the Isle of Man, Jersey, Guernsey and Gibraltar raised in coral, Ireland left sunk in slate.">
 <title>Archipelago Disambiguation Authority</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">

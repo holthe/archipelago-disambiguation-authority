@@ -110,6 +110,13 @@ places below and nothing else derives it:
 | File | What to change |
 | --- | --- |
 | `index.html` | `rel=canonical`, `og:url`, `og:image`, `twitter:image` |
+
+The `og:image` and `twitter:image` URLs carry a `?v=` suffix. It is a cache
+key: `og.png` is served with a seven-day `max-age` and its path never changes,
+so a regenerated card stays invisible behind the edge cache, and behind the
+copy each social platform keeps, until the URL itself changes. **Bump `?v=`
+in `index.html` every time `make og` is run**, or the new card will not be
+the one that circulates.
 | `404.html` | nothing, the 404 uses only root-relative paths |
 | `tools/og.html` | the domain printed in the footer of the share image |
 | `README.md` | this table, and the mentions above it |
