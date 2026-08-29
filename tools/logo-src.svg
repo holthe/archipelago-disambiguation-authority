@@ -1,0 +1,26 @@
+<!-- Source for assets/logo.svg. Text is still live here; `make logo` runs
+     Inkscape with export-text-to-path so the committed logo does not depend
+     on the viewer's fonts. Georgia and Courier New resolve through
+     fontconfig to metric-compatible faces (see the README's font note). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 400" width="1240" height="400" role="img" aria-label="Archipelago Disambiguation Authority">
+  <rect width="1240" height="400" fill="#07161C"/>
+  <rect x="0" y="0" width="1240" height="5" fill="#FF7A5C"/>
+
+  <g transform="translate(84 128) scale(2.25)">
+    <g fill="#31444A">
+      <path d="M12 40 l7-4 6 3 -1 7 -8 3 -5-4 z"/>
+      <path d="M40 44 l6-2 4 4 -3 5 -6 0 -2-4 z"/>
+      <path d="M11 20 l5-3 4 3 -1 5 -6 1 -3-3 z"/>
+    </g>
+    <g fill="#FF7A5C">
+      <path d="M30 12 l9-3 6 5 -2 9 -9 3 -6-6 z"/>
+      <path d="M28 28 l7 1 2 6 -5 4 -6-2 -1-6 z"/>
+    </g>
+    <path d="M4 33 L60 23" stroke="#EFE6D3" stroke-width="1.6" stroke-dasharray="4 3" fill="none" opacity=".75"/>
+  </g>
+
+  <text x="264" y="128" font-family="Liberation Mono, Courier New, monospace" font-size="19" letter-spacing="7" fill="#8FA6AC">OFFICE OF THE REGISTRAR &#183; NOT FOR NAVIGATION</text>
+  <text x="264" y="212" font-family="Georgia, serif" font-size="62" fill="#EFE6D3">Archipelago <tspan font-style="italic" fill="#FF7A5C">Disambiguation</tspan></text>
+  <text x="264" y="278" font-family="Georgia, serif" font-size="62" fill="#EFE6D3">Authority</text>
+  <text x="264" y="326" font-family="Liberation Mono, Courier New, monospace" font-size="19" letter-spacing="3" fill="#8FA6AC">FIFTEEN DEFINITIONS &#183; NINE TERRITORIES &#183; ELEVEN PATTERNS</text>
+</svg>

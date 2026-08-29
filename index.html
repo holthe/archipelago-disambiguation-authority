@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index, follow">
+<meta name="description" content="Fifteen competing definitions of who belongs where, projected onto the same nine territories. British Isles, Great Britain, the United Kingdom and Team GB are four different places.">
+
+<!-- PRODUCTION DOMAIN, hardcoded. The Authority has no domain of its own, so
+     its canonical host is a subdomain of the parent. If that ever changes,
+     edit the four absolute URLs below and the footer of tools/og.html, then
+     re-run `make og`. Those are the only two files that name it. -->
+<link rel="canonical" href="https://archipelago.besteffortindustries.com/">
+<meta name="theme-color" content="#07161C">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48 32x32 16x16">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Archipelago Disambiguation Authority">
+<meta property="og:url" content="https://archipelago.besteffortindustries.com/">
+<meta property="og:title" content="Archipelago Disambiguation Authority">
+<meta property="og:description" content="Select a boundary. Watch which land rises. Eleven distinct patterns, all of them official.">
+<meta property="og:image" content="https://archipelago.besteffortindustries.com/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Archipelago Disambiguation Authority: a chart of the British Isles with one definition selected, showing which territories it includes and which it leaves out.">
+<meta property="og:locale" content="en_GB">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Archipelago Disambiguation Authority">
+<meta name="twitter:description" content="Select a boundary. Watch which land rises. Eleven distinct patterns, all of them official.">
+<meta name="twitter:image" content="https://archipelago.besteffortindustries.com/og.png">
+<meta name="twitter:image:alt" content="Archipelago Disambiguation Authority: a chart of the British Isles with one definition selected, showing which territories it includes and which it leaves out.">
+<title>Archipelago Disambiguation Authority</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* four inputs: water, land, selected, excluded. everything below is derived. */
+  --deep:#07161C; --deep-2:#0E2A34; --sea-hi:#15414F; --deep-rgb:7,22,28;
+  --bone:#EFE6D3; --bone-2:#D9CCB2; --wall:#6B4B33; --bone-rgb:239,230,211;
+  --a:#FF7A5C; --a-mid:#E8543A; --a-wall:#8E3520; --a-rgb:255,122,92;
+  --a-lite:#FFB3A0; --a-lite-rgb:255,235,224; --on-a:#2A0B04;
+  --out:#31444A; --out-2:#243338; --out-wall:#1B272B;
+  --text:#EFE6D3; --text-2:#C6D3D6; --dim:#8FA6AC; --dim-rgb:143,166,172;
+  --label:#FFF6EC; --halo:#4FD6E8; --shadow:#020A0D;
+  --line:rgba(var(--bone-rgb),.14);
+  --gutter:clamp(16px,4vw,64px);
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --serif:"Instrument Serif",Georgia,serif;
+  --ui:"Inter",system-ui,-apple-system,sans-serif;
+  --disp:"Instrument Serif",Georgia,serif;
+  --pad:clamp(16px,4vw,64px);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--deep);color:var(--text);
+  font-family:var(--ui);font-size:16px;line-height:1.55;
+  overflow-x:clip;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.045;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence baseFrequency='.85' numOctaves='3'/></filter><rect width='120' height='120' filter='url(%23n)'/></svg>");
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 var(--pad)}
+
+/* ---------- top ---------- */
+.topbar{
+  display:flex;justify-content:space-between;gap:10px 24px;flex-wrap:wrap;
+  padding:16px 0;font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);
+}
+.topbar b{color:var(--text);font-weight:500}
+
+.hero{padding:clamp(18px,3vw,40px) 0 clamp(14px,2vw,22px)}
+h1{
+  font-family:var(--disp);font-weight:400;
+  font-size:clamp(42px,8.6vw,104px);line-height:.93;letter-spacing:-.015em;
+  margin:0 0 18px;max-width:14ch;
+}
+h1 i{font-style:italic;color:var(--a)}
+.sub{max-width:52ch;margin:0;color:var(--text-2);font-size:clamp(16px,1.9vw,19px)}
+.sub b{color:var(--text);font-weight:600}
+
+/* ---------- map stage ---------- */
+.stage{
+  position:relative;z-index:1;overflow-x:clip;width:100%;max-width:940px;margin:clamp(8px,2vw,20px) auto 0;
+  aspect-ratio:1/.80;perspective:1700px;perspective-origin:50% 44%;
+}
+.board{
+  position:absolute;left:44%;top:48%;width:67%;
+  aspect-ratio:584/835;
+  transform:translate(-50%,-50%) rotateX(50deg) rotateZ(-13deg);
+  transform-style:preserve-3d;
+}
+@media(max-width:760px){
+  .board{width:78%;left:46%;top:45%}
+  .stage{aspect-ratio:1/.94}
+  .lab{font-size:8px;letter-spacing:.05em;padding:2px 6px}
+  .gibnote{left:0;right:0;bottom:1%;text-align:center}
+}
+#terrs{position:absolute;inset:0;transform-style:preserve-3d}
+.sea{
+  position:absolute;inset:-12% -22%;transform:translateZ(-46px);
+  background:
+    radial-gradient(60% 45% at 48% 40%,var(--sea-hi) 0%,var(--deep-2) 46%,var(--deep) 78%);
+  border-radius:50%;
+}
+.rings{
+  position:absolute;inset:-12% -22%;transform:translateZ(-44px);border-radius:50%;
+  background:repeating-radial-gradient(circle at 48% 40%,transparent 0 46px,rgba(var(--dim-rgb),.09) 46px 47px);
+  -webkit-mask-image:radial-gradient(60% 46% at 48% 40%,#000 30%,transparent 78%);
+  mask-image:radial-gradient(60% 46% at 48% 40%,#000 30%,transparent 78%);
+}
+.terr{
+  --lift:0px;--step:2.2px;--top:var(--bone);--sw:var(--wall);--d:0ms;
+  position:absolute;inset:0;transform-style:preserve-3d;pointer-events:none;
+}
+.layer{
+  position:absolute;inset:0;
+  transform:translateZ(calc(var(--lift) - var(--i) * var(--step)));
+  transition:transform .62s cubic-bezier(.22,.9,.24,1) var(--d);
+}
+.layer svg{width:100%;height:100%;display:block;overflow:visible}
+.shade{
+  position:absolute;inset:0;transform:translateZ(-34px) translate(1.6%,1.8%);
+  filter:blur(11px);opacity:.55;pointer-events:none;
+}
+.halo{position:absolute;inset:0;transform:translateZ(-24px);filter:blur(7px);opacity:.7;pointer-events:none}
+.halo svg{width:100%;height:100%;display:block;overflow:visible}
+.halo path{fill:none;stroke:var(--halo);stroke-width:9;opacity:.30}
+.shade svg{width:100%;height:100%;display:block}
+.shade path{fill:var(--shadow)}
+.layer{pointer-events:none}
+.layer path{fill:var(--sw);transition:fill .4s ease var(--d);stroke-linejoin:round}
+.layer.top{pointer-events:auto;cursor:pointer}
+.layer.top svg,.layer.top path{pointer-events:none}
+.layer.top path.face{
+  fill:var(--top);stroke:rgba(var(--deep-rgb),.45);stroke-width:1.2;
+  transition:fill .4s ease var(--d),stroke .25s ease,stroke-width .25s ease
+}
+.layer.top path.sheen{fill:url(#sheen);mix-blend-mode:soft-light;opacity:1}
+.terr.hot .layer.top path.face{stroke:rgba(255,255,255,.92);stroke-width:1.9}
+.terr.up{--lift:44px;--step:4.6px}
+.terr.hot{--lift:18px;--step:3.2px}
+.terr.up.hot{--lift:56px}
+.terr{--top2:var(--bone-2)}
+.terr.setA{--top:var(--a);--top2:var(--a-mid);--sw:var(--a-wall)}
+.terr.out{--top:var(--out);--top2:var(--out-2);--sw:var(--out-wall);--step:1.3px;--lift:-9px}
+.terr.out .halo{opacity:0}
+.terr.out .shade{opacity:.2}
+.terr.out .layer.top path.face{stroke:rgba(var(--deep-rgb),.5);stroke-width:1}
+.terr.up .layer.top path.face{stroke:rgba(var(--a-lite-rgb),.45);stroke-width:1.3}
+.terr.up .halo path{stroke:var(--a);opacity:.4}
+.terr.up .shade{opacity:.62}
+.terr.enter{--lift:-160px}
+.terr.enter .layer{opacity:0;transition:transform .9s cubic-bezier(.2,.85,.25,1) var(--d),opacity .5s ease var(--d)}
+
+.labels{position:absolute;inset:0;transform-style:preserve-3d;pointer-events:none}
+.lab{
+  position:absolute;transform-style:preserve-3d;
+  transform:translate(-50%,-50%) translateZ(calc(var(--ll,0px) + 30px)) rotateZ(13deg) rotateX(-50deg);
+  transition:transform .62s cubic-bezier(.22,.9,.24,1) var(--d,0ms),opacity .4s ease;
+  font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--label);white-space:nowrap;opacity:0;font-weight:500;
+  text-shadow:0 1px 3px rgba(var(--deep-rgb),.98),0 0 16px rgba(var(--deep-rgb),.9);
+}
+.lab.on{opacity:1;color:#fff}
+.lab.small{opacity:0}
+.lab.small.on{opacity:1}
+.tether{position:absolute;pointer-events:none;transform:translateZ(-40px)}
+
+.gibnote{
+  position:absolute;right:2%;bottom:1%;max-width:200px;text-align:right;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--dim);line-height:1.6;
+}
+
+/* ---------- controls ---------- */
+.panel{position:relative;z-index:3;max-width:1180px;margin:0 auto;padding:0 var(--pad) clamp(30px,5vw,60px)}
+.ctlhead{
+  display:flex;align-items:center;gap:10px;margin:0 0 12px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:var(--dim);
+}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--a);flex:none}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:26px}
+.chip{
+  font-family:var(--ui);font-size:13.5px;font-weight:500;color:var(--text-2);
+  background:rgba(var(--bone-rgb),.045);border:1px solid var(--line);
+  padding:7px 13px;border-radius:100px;cursor:pointer;
+  transition:background .2s,color .2s,border-color .2s,transform .2s;
+}
+.chip:hover{background:rgba(var(--bone-rgb),.11);color:#fff;transform:translateY(-1px)}
+.chip[aria-pressed="true"]{background:var(--a);border-color:var(--a);color:var(--on-a);font-weight:600}
+.chip:focus-visible{outline:2px solid var(--a);outline-offset:3px}
+.mwrap{margin-top:clamp(34px,5vw,64px);border-top:1px solid var(--line);padding-top:clamp(26px,4vw,44px)}
+.mscroll{overflow-x:auto;padding-bottom:6px}
+.matrix{min-width:660px;display:grid;grid-template-columns:minmax(190px,1.5fr) repeat(9,1fr);gap:0}
+@media(max-width:720px){
+  .matrix{min-width:498px;grid-template-columns:132px repeat(9,1fr)}
+  .mrow .mname{font-size:12.5px;padding-right:10px}
+  .mhead .mname,.mhead .mcell{font-size:8.5px}
+  .mrow>*{padding:11px 3px}
+}
+.mrow{display:contents}
+.mrow>*{border-bottom:1px solid var(--line);padding:9px 4px;display:flex;align-items:center;justify-content:center}
+.mrow .mname{
+  position:sticky;left:0;z-index:3;background:var(--deep);
+  justify-content:flex-start;padding-left:2px;padding-right:16px;
+  font-size:13.5px;color:var(--text-2);text-align:left;cursor:pointer;transition:color .2s;
+  box-shadow:9px 0 14px -11px rgba(var(--deep-rgb),.95);
+}
+.mhead .mname{z-index:4}
+.mhead .mname,.mhead .mcell{
+  font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--dim);border-bottom:1px solid rgba(var(--bone-rgb),.28);
+}
+.mrow:hover .mname{color:#fff}
+.mrow.sel .mname{color:var(--a);font-weight:600}
+.mdot{
+  width:7px;height:7px;border-radius:50%;background:transparent;
+  box-shadow:inset 0 0 0 1px rgba(var(--bone-rgb),.22);
+  transition:background .3s,transform .3s,box-shadow .3s;
+}
+.mdot.in{width:11px;height:11px;background:var(--bone);box-shadow:none}
+.mrow.sel .mdot.in{background:var(--a);transform:scale(1.12)}
+.mrow.sel .mcell{background:rgba(var(--a-rgb),.07)}
+.mrow.sel .mname{background:var(--deep);box-shadow:9px 0 14px -11px rgba(var(--deep-rgb),.95)}
+.mrow button.mname{background:var(--deep);border:0;font-family:var(--ui);width:100%}
+.mrow.sel button.mname{background:var(--deep);color:var(--a);font-weight:600}
+.mrow button.mname:focus-visible{outline:2px solid var(--a);outline-offset:-2px}
+.tip{
+  position:fixed;z-index:60;pointer-events:none;opacity:0;transform:translate(-50%,-135%);
+  background:rgba(var(--deep-rgb),.94);border:1px solid rgba(var(--bone-rgb),.18);border-radius:10px;
+  padding:9px 12px;transition:opacity .16s ease;backdrop-filter:blur(6px);max-width:230px;
+}
+.tip strong{display:block;font-size:13.5px;font-weight:600;margin-bottom:2px}
+.tip span{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim)}
+.tip.on{opacity:1}
+.mapnote{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--dim);margin:-14px 0 16px}
+.kind{
+  display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--dim);border:1px solid var(--line);
+  border-radius:100px;padding:3px 9px;margin-bottom:12px;
+}
+
+.cmp{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:26px}
+select{
+  appearance:none;-webkit-appearance:none;border-radius:100px;
+  background:rgba(var(--bone-rgb),.05);border:1px solid var(--line);
+  color:var(--text-2);font-family:var(--ui);font-size:13.5px;font-weight:500;
+  padding:8px 34px 8px 14px;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,var(--dim) 50%),linear-gradient(135deg,var(--dim) 50%,transparent 50%);
+  background-position:calc(100% - 18px) calc(50% + 1px),calc(100% - 13px) calc(50% + 1px);
+  background-size:5px 5px,5px 5px;background-repeat:no-repeat;
+}
+select:focus-visible{outline:2px solid var(--a);outline-offset:3px}
+
+.finding{
+  border-top:1px solid var(--line);padding-top:22px;
+  display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(18px,3vw,48px);
+}
+@media(max-width:760px){.finding{grid-template-columns:1fr;gap:20px}}
+.finding h3{
+  font-family:var(--mono);font-size:10px;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--a);margin:0 0 10px;font-weight:500;
+}
+#f-main{
+  font-family:var(--disp);font-size:clamp(21px,3vw,30px);line-height:1.28;
+  margin:0;letter-spacing:-.01em;
+}
+.tallies{font-family:var(--mono);font-size:12px;line-height:2;color:var(--dim);margin:0}
+.tallies span{display:block}
+.tallies em{font-style:normal;color:var(--a)}
+.tallies u{text-decoration:none;color:var(--text-2)}
+
+/* ---------- sections ---------- */
+section{padding:clamp(44px,7vw,96px) 0;border-top:1px solid var(--line)}
+.shead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.shead .n{font-family:var(--mono);font-size:10px;letter-spacing:.17em;color:var(--a)}
+h2{font-family:var(--disp);font-weight:400;font-size:clamp(28px,4.6vw,50px);letter-spacing:-.01em;margin:0}
+.shead .aside{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-left:auto}
+.lede{max-width:60ch;color:var(--text-2);margin:0 0 30px}
+
+/* register */
+.reg{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:rgba(var(--bone-rgb),.028)}
+.reg-f{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line)}
+@media(max-width:640px){.reg-f{grid-template-columns:1fr}}
+.f{padding:18px 20px;border-right:1px solid var(--line)}
+.f:last-child{border-right:0}
+.f label{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.f select{width:100%;border-radius:8px;background-color:rgba(var(--bone-rgb),.05);border-color:var(--line);color:var(--text);
+  background-image:linear-gradient(45deg,transparent 50%,var(--bone) 50%),linear-gradient(135deg,var(--bone) 50%,transparent 50%);
+  font-size:16.5px}
+.ruling{padding:26px 20px 30px;position:relative}
+.rmeta{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px}
+#verdict{font-family:var(--disp);font-size:clamp(30px,5.6vw,54px);line-height:1.05;margin:0 0 20px;max-width:18ch}
+.rrows{max-width:66ch}
+.rrows>div{display:grid;grid-template-columns:120px 1fr;gap:14px;padding:11px 0;border-top:1px solid var(--line)}
+@media(max-width:560px){.rrows>div{grid-template-columns:1fr;gap:3px}}
+.rrows dt{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);padding-top:4px}
+.rrows dd{margin:0;font-size:15.5px;color:var(--text-2)}
+
+/* tables + lists */
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{text-align:left;vertical-align:top;padding:14px 18px 14px 0;border-bottom:1px solid var(--line)}
+th{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--a);font-weight:500;white-space:nowrap}
+td{color:var(--text-2)}
+td:first-child{color:var(--text);font-weight:600;white-space:nowrap;padding-right:24px}
+
+.cauts{list-style:none;margin:0;padding:0;counter-reset:c;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:0 46px}
+.cauts li{counter-increment:c;position:relative;padding:15px 0 15px 42px;border-top:1px solid var(--line);color:var(--text-2)}
+.cauts li::before{content:counter(c,decimal-leading-zero);position:absolute;left:0;top:17px;
+  font-family:var(--mono);font-size:10.5px;color:var(--a)}
+
+.ntm{list-style:none;margin:0;padding:0}
+.ntm li{display:grid;grid-template-columns:130px 1fr;gap:24px;padding:20px 0;border-top:1px solid var(--line)}
+@media(max-width:600px){.ntm li{grid-template-columns:1fr;gap:6px}}
+.ntm .yr{font-family:var(--disp);font-size:30px;color:var(--a);line-height:1}
+.ntm .ref{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-top:6px}
+.ntm p{margin:0;max-width:62ch;color:var(--text-2)}
+.ntm .tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--a-lite);display:block;margin-bottom:6px}
+
+footer{border-top:1px solid var(--line);padding:34px 0 60px;font-family:var(--mono);font-size:10.5px;line-height:1.9;color:var(--dim)}
+footer .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:26px}
+footer b{display:block;color:var(--text);letter-spacing:.15em;text-transform:uppercase;font-size:9.5px;font-weight:500;margin-bottom:6px}
+
+@media(prefers-reduced-motion:reduce){
+  .layer,.lab,.chip{transition:none !important}
+  .terr.enter{--lift:0px}
+  .terr.enter .layer{opacity:1}
+}
+footer .doc{
+  font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--dim);padding-top:18px;margin-top:22px;border-top:1px solid var(--line);
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <span><b>Archipelago Disambiguation Authority</b> &nbsp;Office of the Registrar</span>
+    <span>Boundaries as reported &middot; Not for navigation</span>
+  </div>
+
+  <div class="hero">
+    <h1>Archipelago <i>Disambiguation</i> Authority</h1>
+    <p class="sub">We determine which team you play for, which passport you hold, and which of those is currently true. <b>Select a boundary. Watch which land rises.</b></p>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="board" id="board">
+    <div class="sea"></div>
+    <div class="rings"></div>
+    <div id="terrs"></div>
+    <div class="labels" id="labels"></div>
+  </div>
+  <p class="gibnote">Inset, lower right<br>Gibraltar &middot; 1,700 km south<br>Not to scale</p>
+</div>
+
+<div class="panel">
+  <p class="ctlhead"><span class="dot"></span> Choose a definition. The land inside it rises.</p>
+  <p class="mapnote">Silhouettes are schematic. Outlying islands, Shetland among them, are omitted.</p>
+  <div class="chips" id="chips"></div>
+
+  <div class="finding" aria-live="polite">
+    <div>
+      <h3 id="f-count"></h3>
+      <p id="f-main"></p>
+    </div>
+    <div>
+      <h3>Excluded</h3>
+      <p class="tallies" id="f-tally"></p>
+    </div>
+  </div>
+
+  <div class="mwrap">
+    <div class="shead" style="margin-bottom:6px">
+      <span class="n">01</span>
+      <h2>All of them at once</h2>
+      <span class="aside" id="m-aside"></span>
+    </div>
+    <p class="lede">Fifteen competing definitions of who or what belongs where, projected onto the same nine territories. They are not the same species of thing: some are geography, some are membership of an organisation, one is a legal status held by a person. Pick a row to put it on the map. <span id="m-dupe"></span></p>
+    <div class="mscroll"><div class="matrix" id="matrix"></div></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<section id="register">
+  <div class="shead">
+    <span class="n">02</span>
+    <h2>Designation of persons</h2>
+    <span class="aside">Non-binding. Binding in Belfast.</span>
+  </div>
+  <p class="lede">Boundaries govern territory. Eligibility rules govern people. Choose a place of connection and the context in which the question was put. Every formal ruling below is one you can look up, though sporting answers assume the person otherwise satisfies the relevant citizenship, ancestry, residence, prior-representation and selection rules. Birth alone has not been sufficient for British citizenship since 1983, or for Irish citizenship since 2005.</p>
+
+  <div class="reg">
+    <div class="reg-f">
+      <div class="f"><label for="origin">Place of connection</label><select id="origin"></select></div>
+      <div class="f"><label for="context">Context of enquiry</label><select id="context"></select></div>
+    </div>
+    <div class="ruling" aria-live="polite">
+      <div class="rmeta"><span id="m-ctx"></span><span id="m-org"></span><span id="serial"></span></div>
+      <p id="verdict"></p>
+      <dl class="rrows">
+        <div><dt>Governing text</dt><dd id="basis"></dd></div>
+        <div><dt>Officer's note</dt><dd id="note"></dd></div>
+        <div><dt>Portability</dt><dd id="port"></dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section id="key">
+  <div class="shead">
+    <span class="n">03</span>
+    <h2>Terms and their limits</h2>
+    <span class="aside">No two rows are interchangeable</span>
+  </div>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Term</th><th>Covers</th><th>Notably excludes</th></tr></thead>
+    <tbody>
+      <tr><td>British Isles</td><td>Great Britain, Ireland, the Isle of Man, and by convention the Channel Islands</td><td>Any suggestion that Ireland is British, which is the objection the term reliably produces</td></tr>
+      <tr><td>Great Britain</td><td>England, Scotland, Wales</td><td>Northern Ireland</td></tr>
+      <tr><td>United Kingdom</td><td>Great Britain and Northern Ireland</td><td>The Isle of Man, Jersey, Guernsey</td></tr>
+      <tr><td>Team GB</td><td>The whole United Kingdom, the Crown Dependencies, and eligible Overseas Territories</td><td>Accuracy in its own name</td></tr>
+      <tr><td>Crown Dependencies</td><td>The Isle of Man, Jersey, Guernsey. Own parliaments, own laws</td><td>Membership of the United Kingdom, and independence from it</td></tr>
+      <tr><td>British Overseas Territories</td><td>Fourteen territories. Most of their citizens are also British citizens: existing BOTCs connected with qualifying territories acquired it automatically in 2002, the Sovereign Base Areas were excluded, and some statuses acquired since require separate registration</td><td>Britain</td></tr>
+      <tr><td>Ireland</td><td>An island. Also a sovereign state</td><td>Six counties, in exactly one of those two senses</td></tr>
+      <tr><td>Home Nations</td><td>England, Scotland, Wales, Northern Ireland</td><td>Two of them, in cricket. One of them, in rugby</td></tr>
+      <tr><td>British and Irish Lions</td><td>Four unions across two sovereign states</td><td>The distinction those two states were founded on</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="cautions">
+  <div class="shead">
+    <span class="n">04</span>
+    <h2>Known and unresolved</h2>
+    <span class="aside">All verified. None defects.</span>
+  </div>
+  <p class="lede">Recorded here so they are not reported twice. No attempt should be made to reconcile them.</p>
+  <ol class="cauts">
+    <li>The United Kingdom includes Northern Ireland. Great Britain does not. Team GB does.</li>
+    <li>The British Isles include Ireland, which is not British.</li>
+    <li>England, Scotland, Wales and Northern Ireland are conventionally described as the four constituent countries. In international relations the sovereign state is the United Kingdom.</li>
+    <li>British Overseas Territories are British, are overseas, and are not part of Britain.</li>
+    <li>Ireland names an island, and a state that does not cover the whole island.</li>
+    <li>Team GB fields people from outside Great Britain and, in the Crown Dependencies, from outside the United Kingdom.</li>
+    <li>One team at the Olympics. Eight at the Commonwealth Games, from the same eight territories shown here.</li>
+    <li>In rugby, Northern Ireland is Ireland. In football it is Northern Ireland. At the Olympics it is whichever the athlete selected.</li>
+    <li>In cricket the board is the England and Wales Cricket Board, and the team is England.</li>
+    <li>In the Ryder Cup, Britain is Europe. In the Team Cup, Britain and Ireland play against Continental Europe. Britain is Europe except when it is playing Europe.</li>
+    <li>In these golf cups Britain is never simply Britain: it is Europe in the Ryder Cup, and Great Britain and Ireland in the Walker Cup and the Team Cup. At the Olympics it is Team GB.</li>
+    <li>The Isle of Man has been an ICC member since 2004 and has never had an Olympic team of its own.</li>
+    <li>Gibraltar has a football team recognised by FIFA and no Eurovision entry.</li>
+  </ol>
+</section>
+
+<section id="ntm">
+  <div class="shead">
+    <span class="n">05</span>
+    <h2>Notices to Mariners</h2>
+    <span class="aside">Corrections issued. Chart never fully corrected.</span>
+  </div>
+  <p class="lede">Charts are amended by notice rather than reprint. So is the constitution. Both keep the errors of every previous edition.</p>
+  <ul class="ntm">
+    <li><div><div class="yr">1707</div><div class="ref">NtM 1707/01</div></div>
+      <div><p>England, already merged with Wales, unions with Scotland on 1 May 1707. New name: Great Britain. Wales is not in the name, and is not mentioned in it again.</p></div></li>
+    <li><div><div class="yr">1801</div><div class="ref">NtM 1801/01</div></div>
+      <div><span class="tag">Boundary amended</span><p>Union with Ireland. New name: the United Kingdom of Great Britain and Ireland. All existing references to Great Britain remain in service and are now imprecise.</p></div></li>
+    <li><div><div class="yr">1922</div><div class="ref">NtM 1922/01</div></div>
+      <div><span class="tag">Boundary amended</span><p>The Irish Free State is established on 6 December. Northern Ireland exercises its treaty right to opt out the following day. The resulting state contains twenty-six counties. The United Kingdom's name is not corrected until 1927, when Northern Ireland is appended. The abbreviation is never corrected at all.</p></div></li>
+    <li><div><div class="yr">1998</div><div class="ref">NtM 1998/04</div></div>
+      <div><p>Belfast Agreement. It does not invent anything: it recognises and guarantees the existing birthright of the people of Northern Ireland to be accepted as British or Irish, or both, and to hold both citizenships. The Authority regards this as the only part of the chart that works as drawn.</p></div></li>
+    <li><div><div class="yr">2020</div><div class="ref">NtM 2020/12</div></div>
+      <div><p>Withdrawal from the European Union. Team Europe is unaffected, because Ryder Cup eligibility never ran on European Union membership. Britain remains Europe in golf for reasons that predate the European Union and outlasted it.</p></div></li>
+  </ul>
+</section>
+
+</div>
+
+<footer>
+  <div class="wrap cols">
+    <div><b>Authority</b>Archipelago Disambiguation Authority, a division of <a href="https://besteffortindustries.com">Best Effort Industries</a>. Established 1707. Reissued 1801, 1927, 1998.</div>
+    <div><b>Appeals</b>A designation may be appealed in any context other than the one it was issued in. Appeals are heard in the appellant's second-choice jurisdiction.</div>
+    <div><b>Liability</b>Findings are advisory. No liability is accepted for identity claimed in a pub, declared at a border, or shouted during a Six Nations fixture.</div>
+    <div><b>Verification</b>Every entry checked against primary or near-primary sources on 28 August 2026. Sporting eligibility and broadcaster participation both change; this page will rot.</div>
+    <div><b>Languages</b>Available in English, English, English and English.</div>
+  </div>
+  <div class="wrap"><div class="doc">DOC: BEI-ADA &middot; REV 1.0 / ISSUED / CORRECT IN AT LEAST ONE JURISDICTION</div></div>
+</footer>
+
+<script>
+var GEO = {"sco":[[[-3.02,58.64],[-3.09,58.44],[-3.35,58.28],[-3.65,58.12],[-4.02,57.87],[-4.25,57.7],[-4.22,57.48],[-3.87,57.59],[-3.5,57.68],[-3.28,57.72],[-2.6,57.7],[-2.0,57.69],[-1.78,57.51],[-2.09,57.15],[-2.2,56.9],[-2.47,56.71],[-2.87,56.45],[-2.6,56.28],[-2.8,56.1],[-2.6,56.0],[-2.13,55.9],[-2.0,55.77],[-2.2,55.65],[-2.35,55.55],[-2.55,55.35],[-2.9,55.15],[-3.06,54.98],[-3.6,54.87],[-4.05,54.83],[-4.4,54.7],[-4.86,54.63],[-5.03,54.9],[-4.9,55.05],[-4.86,55.24],[-4.63,55.46],[-4.75,55.7],[-4.9,55.95],[-5.1,55.85],[-5.35,55.75],[-5.6,55.5],[-5.8,55.3],[-5.7,55.6],[-5.55,55.9],[-5.35,56.05],[-5.47,56.41],[-5.7,56.55],[-6.2,56.73],[-5.9,56.9],[-5.83,57.0],[-5.72,57.28],[-5.55,57.55],[-5.2,57.7],[-5.16,57.9],[-5.3,58.15],[-5.0,58.35],[-5.0,58.62],[-4.4,58.55],[-3.8,58.58],[-3.5,58.6]],[[-7.1,58.25],[-6.2,58.5],[-6.15,58.2],[-6.85,57.75],[-7.1,57.9]],[[-6.3,57.3],[-5.95,57.55],[-5.75,57.35],[-6.05,57.1],[-6.35,57.15]],[[-6.3,56.55],[-5.75,56.6],[-5.7,56.35],[-6.2,56.32]],[[-3.2,59.1],[-2.85,59.15],[-2.75,58.85],[-3.25,58.85]]],"eng":[[[-2.0,55.77],[-1.6,55.3],[-1.4,55.0],[-1.35,54.7],[-0.9,54.6],[-0.6,54.5],[-0.2,54.15],[-0.1,53.9],[0.1,53.6],[0.0,53.45],[0.2,53.3],[0.35,53.15],[0.15,52.9],[0.6,52.95],[1.3,52.93],[1.72,52.7],[1.75,52.48],[1.6,52.1],[1.28,51.95],[1.0,51.8],[0.6,51.6],[0.9,51.5],[1.4,51.38],[1.32,51.13],[0.8,50.9],[0.25,50.74],[-0.3,50.8],[-0.8,50.73],[-1.1,50.79],[-1.6,50.72],[-1.95,50.72],[-2.45,50.6],[-2.95,50.72],[-3.4,50.62],[-3.65,50.22],[-4.2,50.35],[-4.65,50.32],[-5.05,50.2],[-5.2,49.96],[-5.72,50.07],[-5.5,50.2],[-5.0,50.55],[-4.2,51.05],[-3.8,51.22],[-3.5,51.22],[-3.0,51.32],[-2.7,51.5],[-2.68,51.6],[-2.9,51.85],[-3.0,52.0],[-3.13,52.3],[-3.1,52.55],[-2.95,52.75],[-2.9,52.95],[-3.0,53.25],[-2.9,53.35],[-3.05,53.55],[-3.05,53.82],[-2.9,54.0],[-3.0,54.1],[-3.2,54.1],[-3.6,54.3],[-3.6,54.5],[-3.35,54.7],[-3.4,54.9],[-3.06,54.98],[-2.9,55.15],[-2.55,55.35],[-2.35,55.55],[-2.2,55.65]]],"wal":[[[-2.68,51.6],[-2.9,51.85],[-3.0,52.0],[-3.13,52.3],[-3.1,52.55],[-2.95,52.75],[-2.9,52.95],[-3.0,53.25],[-3.3,53.32],[-3.83,53.33],[-4.13,53.23],[-4.3,53.42],[-4.65,53.42],[-4.6,53.25],[-4.4,53.13],[-4.75,52.93],[-4.65,52.8],[-4.2,52.9],[-4.1,52.75],[-4.1,52.55],[-4.08,52.41],[-4.3,52.2],[-4.7,52.1],[-5.15,51.98],[-5.3,51.88],[-5.1,51.75],[-4.95,51.72],[-4.7,51.73],[-4.4,51.73],[-4.3,51.62],[-4.0,51.6],[-3.7,51.55],[-3.18,51.46],[-2.95,51.53]]],"nir":[[[-7.25,55.06],[-6.95,55.17],[-6.66,55.2],[-6.4,55.24],[-6.15,55.22],[-5.95,55.05],[-5.79,54.85],[-5.7,54.7],[-5.55,54.68],[-5.45,54.5],[-5.53,54.38],[-5.55,54.31],[-5.75,54.25],[-5.89,54.22],[-6.1,54.1],[-6.28,54.05],[-6.65,54.1],[-6.95,54.18],[-7.3,54.2],[-7.55,54.25],[-7.85,54.35],[-8.1,54.5],[-7.9,54.68],[-7.6,54.75],[-7.45,54.9]]],"irl":[[[-7.37,55.38],[-7.2,55.2],[-7.25,55.06],[-7.45,54.9],[-7.6,54.75],[-7.9,54.68],[-8.1,54.5],[-7.85,54.35],[-7.55,54.25],[-7.3,54.2],[-6.95,54.18],[-6.65,54.1],[-6.28,54.05],[-6.35,53.98],[-6.3,53.72],[-6.15,53.35],[-6.05,53.15],[-6.03,52.98],[-6.1,52.7],[-6.2,52.45],[-6.35,52.25],[-6.8,52.2],[-7.0,52.15],[-7.6,52.05],[-8.0,51.9],[-8.3,51.7],[-8.5,51.6],[-9.0,51.55],[-9.65,51.45],[-9.9,51.6],[-10.0,51.75],[-9.8,51.9],[-10.2,52.0],[-10.4,52.13],[-10.1,52.25],[-9.6,52.3],[-9.3,52.55],[-9.6,52.6],[-9.93,52.56],[-9.6,52.8],[-9.2,53.0],[-9.05,53.27],[-9.6,53.3],[-10.1,53.5],[-9.9,53.7],[-10.1,53.97],[-9.7,54.05],[-9.9,54.3],[-9.2,54.3],[-8.8,54.3],[-8.5,54.3],[-8.3,54.5],[-8.6,54.6],[-8.7,54.63],[-8.45,54.75],[-8.6,54.95],[-8.28,55.15],[-8.0,55.2],[-7.63,55.28],[-7.5,55.15]]],"iom":[[[-4.42,54.42],[-4.3,54.25],[-4.55,54.05],[-4.75,54.1],[-4.78,54.28],[-4.62,54.4]]],"jsy":[[[-2.25,49.25],[-2.02,49.26],[-2.0,49.16],[-2.24,49.17]]],"gsy":[[[-2.68,49.51],[-2.52,49.5],[-2.5,49.42],[-2.66,49.43]]]};
+(function(){
+"use strict";
+
+var T = {eng:"England",sco:"Scotland",wal:"Wales",nir:"Northern Ireland",
+  iom:"Isle of Man",jsy:"Jersey",gsy:"Guernsey",gib:"Gibraltar",irl:"Ireland (the state)"};
+var ORDER = ["sco","nir","irl","eng","wal","iom","jsy","gsy","gib"];
+
+/* projection */
+var LON0=-10.8, LAT1=59.55, SX=45.3, SY=78.0;
+var VW=584, VH=835;
+function px(p){ return [(p[0]-LON0)*SX, (LAT1-p[1])*SY]; }
+
+/* Gibraltar sits off the map. It gets an inset tile. */
+GEO.gib = [[[498,762],[546,762],[546,802],[498,802]]];
+
+function smooth(pts, t, dp){
+  dp = dp || 1;
+  var n = pts.length, d = "M" + pts[0][0].toFixed(dp) + " " + pts[0][1].toFixed(dp);
+  for(var i = 0; i < n; i++){
+    var p0 = pts[(i - 1 + n) % n], p1 = pts[i], p2 = pts[(i + 1) % n], p3 = pts[(i + 2) % n];
+    var c1x = p1[0] + (p2[0] - p0[0]) / 6 * t, c1y = p1[1] + (p2[1] - p0[1]) / 6 * t;
+    var c2x = p2[0] - (p3[0] - p1[0]) / 6 * t, c2y = p2[1] - (p3[1] - p1[1]) / 6 * t;
+    d += "C" + c1x.toFixed(dp) + " " + c1y.toFixed(dp) + "," +
+               c2x.toFixed(dp) + " " + c2y.toFixed(dp) + "," +
+               p2[0].toFixed(dp) + " " + p2[1].toFixed(dp);
+  }
+  return d + "Z";
+}
+function pathFor(key, frac){
+  var d = "", fx = frac ? 1 / VW : 1, fy = frac ? 1 / VH : 1, dp = frac ? 5 : 1;
+  GEO[key].forEach(function(poly){
+    var pts = poly.map(function(pt){
+      var q = (key === "gib") ? pt : px(pt);
+      return [q[0] * fx, q[1] * fy];
+    });
+    d += (key === "gib")
+      ? ("M" + pts.map(function(q){ return q[0].toFixed(dp) + " " + q[1].toFixed(dp); }).join("L") + "Z")
+      : smooth(pts, 0.72, dp);
+  });
+  return d;
+}
+
+/* hit testing: the clipped div is the target, so the shape is the hit area */
+var clipHost = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+clipHost.setAttribute("width", "0");
+clipHost.setAttribute("height", "0");
+clipHost.setAttribute("aria-hidden", "true");
+clipHost.style.position = "absolute";
+document.body.appendChild(clipHost);
+var defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+clipHost.appendChild(defs);
+function makeClip(key){
+  var cp = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+  cp.setAttribute("id", "clip-" + key);
+  cp.setAttribute("clipPathUnits", "objectBoundingBox");
+  var pa = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  pa.setAttribute("d", pathFor(key, true));
+  cp.appendChild(pa);
+  defs.appendChild(cp);
+}
+function centroid(key){
+  var big = GEO[key].slice().sort(function(a,b){ return b.length - a.length; })[0];
+  var sx=0, sy=0;
+  big.forEach(function(pt){
+    var q = (key === "gib") ? pt : px(pt);
+    sx += q[0]; sy += q[1];
+  });
+  return [sx/big.length, sy/big.length];
+}
+
+var LAYERS = 7;
+var terrs = document.getElementById("terrs");
+var labels = document.getElementById("labels");
+var els = {}, labs = {}, tops = {};
+
+ORDER.forEach(function(key){
+  var d = pathFor(key);
+  var wrap = document.createElement("div");
+  wrap.className = "terr enter";
+  wrap.setAttribute("data-t", key);
+  wrap.setAttribute("tabindex", "0");
+  wrap.setAttribute("role", "button");
+  wrap.setAttribute("aria-label", T[key]);
+  var svgOpen = '<svg viewBox="0 0 ' + VW + ' ' + VH + '" preserveAspectRatio="xMidYMid meet">';
+
+  var ha = document.createElement("div");
+  ha.className = "halo";
+  ha.innerHTML = svgOpen + '<path d="' + d + '"/></svg>';
+  wrap.appendChild(ha);
+
+  var sh = document.createElement("div");
+  sh.className = "shade";
+  sh.innerHTML = svgOpen + '<path d="' + d + '"/></svg>';
+  wrap.appendChild(sh);
+
+  for(var i = LAYERS - 1; i >= 0; i--){
+    var l = document.createElement("div");
+    l.className = "layer" + (i === 0 ? " top" : "");
+    l.style.setProperty("--i", i);
+    if(i === 0){
+      var gid = "g-" + key;
+      makeClip(key);
+      l.style.clipPath = "url(#clip-" + key + ")";
+      l.innerHTML = svgOpen +
+        '<defs><linearGradient id="' + gid + '" x1="0.1" y1="0" x2="0.75" y2="1">' +
+          '<stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>' +
+          '<stop offset="0.45" stop-color="#ffffff" stop-opacity="0.06"/>' +
+          '<stop offset="1" stop-color="#04121A" stop-opacity="0.42"/>' +
+        '</linearGradient></defs>' +
+        '<path class="face" d="' + d + '"/>' +
+        '<path class="sheen" d="' + d + '" fill="url(#' + gid + ')"/></svg>';
+    } else {
+      l.innerHTML = svgOpen + '<path d="' + d + '"/></svg>';
+    }
+    wrap.appendChild(l);
+  }
+  terrs.appendChild(wrap);
+  els[key] = wrap;
+  tops[key] = wrap.querySelector(".layer.top");
+
+  var c = centroid(key);
+  var lab = document.createElement("div");
+  lab.className = "lab" + (["iom","jsy","gsy","gib"].indexOf(key) >= 0 ? " small" : "");
+  lab.textContent = key === "irl" ? "Ireland" : T[key];
+  lab.style.left = (c[0] / VW * 100) + "%";
+  lab.style.top  = (c[1] / VH * 100) + "%";
+  labels.appendChild(lab);
+  labs[key] = lab;
+});
+
+var BOUNDARIES = [
+  {id:"gb", kind:"Geographic term", note:"An island, not a state. Northern Ireland is not on it. The Olympic team named after it includes Northern Ireland anyway.",label:"Great Britain",m:["eng","sco","wal"],
+   basis:"A geographic term. The island itself, and in common use the three countries on it."},
+  {id:"uk", kind:"Sovereign state", note:"The state. It excludes the Isle of Man, Jersey and Guernsey, which are British without being in it.",label:"United Kingdom",m:["eng","sco","wal","nir"],
+   basis:"Acts of Union 1707 and 1800, as amended 1927."},
+  {id:"isles", kind:"Geographic term", note:"A geographic term that includes a sovereign country which rejects the adjective.",label:"British Isles",m:["eng","sco","wal","nir","irl","iom","jsy","gsy"],
+   basis:"Geographic convention. The Channel Islands are included by habit rather than geology."},
+  {id:"teamgb", kind:"Olympic remit", note:"Named after an island. Among the nine shown here it covers five territories that are not on it, one nearer to Africa than to Britain, and the remit extends further, to UK dependent territories that have no IOC-recognised National Olympic Committee of their own. Bermuda and the Cayman Islands have their own, and do not feed into it.",label:"Team GB",m:["eng","sco","wal","nir","iom","jsy","gsy","gib"],
+   basis:"British Olympic Association."},
+  {id:"cwg", kind:"Competition entry", note:"Among the nine territories here, exactly the same eight as Team GB, entered as eight separate teams with eight separate flags.",label:"Commonwealth Games",m:["eng","sco","wal","nir","iom","jsy","gsy","gib"],
+   basis:"Commonwealth Sport, known as the Commonwealth Games Federation until 2025. Eight teams, eight flags."},
+  {id:"crown", kind:"Constitutional status", note:"Own parliaments, own laws, not in the United Kingdom, and at the Olympics they compete under Team GB alongside it.",label:"Crown Dependencies",m:["iom","jsy","gsy"],
+   basis:"Possessions of the Crown. The Bailiwick of Jersey, the Bailiwick of Guernsey and the Isle of Man. Own parliaments, own laws, outside the United Kingdom."},
+  {id:"irerugby", kind:"Governing bodies", note:"One team for the whole island, in three sports, across two sovereign states, with a purpose-made flag and a purpose-made anthem.",label:"Ireland (rugby, cricket, hockey)",m:["nir","irl"],
+   basis:"All-island governing bodies. Rugby\u0027s union predates partition, formed 1879. Cricket\u0027s was established in 1927, after it. Hockey Ireland governs all thirty-two counties and was formed in 2000 by merging the pre-existing all-island men\u0027s and women\u0027s unions. All three are all-island regardless."},
+  {id:"crkeng", kind:"Governing body", note:"Great Britain with Scotland removed. The board names Wales. The team does not.",label:"England (cricket)",m:["eng","wal"],
+   basis:"England and Wales Cricket Board. The board names Wales. The team does not."},
+  {id:"gbi", kind:"Competition eligibility", note:"One team spanning two sovereign states, playing the United States.",label:"Great Britain and Ireland (Walker Cup)",m:["eng","sco","wal","nir","irl"],
+   basis:"R and A agreement with the USGA. The published criteria name the side but do not define its territorial extent, so the Crown Dependencies are shown here as outside it provisionally."},
+  {id:"lions", kind:"Competition eligibility", note:"Adds the sovereign state that left the United Kingdom in 1922. Nobody has raised it since.",label:"British and Irish Lions",m:["eng","sco","wal","nir","irl"],
+   basis:"Four unions touring as one side since 1888."},
+  {id:"fifa", kind:"Association membership", note:"Four members inside one sovereign state, plus Ireland and Gibraltar. FIFA membership has never been limited to sovereign states: Hong Kong and the Faroe Islands are members too.",label:"FIFA members",m:["eng","sco","wal","nir","irl","gib"],
+   basis:"Six members shown here: the four Home Nations, Ireland, and Gibraltar. Jersey applied in 2015 and the UEFA Congress refused it in February 2018, for not being a sovereign state."},
+  {id:"cit", kind:"Citizenship", note:"Among the nine shown here, the passport covers four territories the United Kingdom does not contain.",label:"British citizenship",m:["eng","sco","wal","nir","iom","jsy","gsy","gib"],
+   basis:"British Nationality Act 1981. Birth in the United Kingdom has not been sufficient on its own since 1983; parental status matters."},
+  {id:"euro", kind:"Broadcaster participation", note:"Decided by broadcaster rather than territory, so the Crown Dependencies are in and Gibraltar is out.",label:"Eurovision: United Kingdom",m:["eng","sco","wal","nir","iom","jsy","gsy"],
+   basis:"European Broadcasting Union membership, determined by broadcaster rather than territory."},
+  {id:"teamcup", kind:"Competition eligibility", label:"Great Britain and Ireland (Team Cup)", m:["eng","sco","wal","nir","irl"],
+   note:"Great Britain and Ireland play Continental Europe here, while the Ryder Cup draws on the same Great Britain and Ireland pool as part of Europe. Both sides must be European to be eligible.",
+   basis:"DP World Tour. The present event debuted as the Hero Cup in 2023 and is now the Team Cup, reviving the format the Seve Trophy used from 2000 to 2013. As with the Walker Cup, the published material names the side without defining its territorial edges, so the Crown Dependencies are shown outside it provisionally."},
+  {id:"ryder", kind:"Competition eligibility", note:"Entered as Europe since 1979, including the same territories that play against Continental Europe in the Team Cup. Leaving the European Union changed nothing, because eligibility never ran on European Union membership.",label:"Team Europe (Ryder Cup)",m:["eng","sco","wal","nir","irl","iom","jsy","gsy","gib"],
+   basis:"Eligibility runs through European tour membership and the player, not through territory. The side expanded from Great Britain and Ireland to Europe in 1979."}
+];
+
+
+function names(l){
+  var n = l.map(function(k){ return T[k]; });
+  if(!n.length) return "nothing";
+  if(n.length === 1) return n[0];
+  return n.slice(0,-1).join(", ") + " and " + n[n.length-1];
+}
+function find(id){ return BOUNDARIES.filter(function(b){ return b.id === id; })[0]; }
+
+var chipsA = document.getElementById("chips");
+var matrix = document.getElementById("matrix");
+var current = "gb";
+
+function select(id){
+  current = id;
+  Array.prototype.forEach.call(chipsA.children, function(x){
+    x.setAttribute("aria-pressed", x.dataset.id === id ? "true" : "false");
+  });
+  Array.prototype.forEach.call(matrix.querySelectorAll(".mrow"), function(r){
+    r.classList.toggle("sel", r.dataset.id === id);
+  });
+  draw();
+}
+
+BOUNDARIES.forEach(function(b){
+  var c = document.createElement("button");
+  c.className = "chip"; c.type = "button"; c.textContent = b.label; c.dataset.id = b.id;
+  c.setAttribute("aria-pressed", b.id === current ? "true" : "false");
+  c.addEventListener("click", function(){ select(b.id); });
+  chipsA.appendChild(c);
+});
+
+/* the grid: every definition against the nine territories */
+var CODES = {eng:"Eng",sco:"Sco",wal:"Wal",nir:"N.Ire",iom:"IoM",jsy:"Jsy",gsy:"Gsy",gib:"Gib",irl:"Ire"};
+var GRID = ["eng","sco","wal","nir","irl","iom","jsy","gsy","gib"];
+var head = document.createElement("div");
+head.className = "mrow mhead";
+head.innerHTML = '<span class="mname">Definition</span>' +
+  GRID.map(function(k){ return '<span class="mcell">' + CODES[k] + '</span>'; }).join("");
+matrix.appendChild(head);
+
+BOUNDARIES.forEach(function(b){
+  var row = document.createElement("div");
+  row.className = "mrow" + (b.id === current ? " sel" : "");
+  row.dataset.id = b.id;
+  row.innerHTML = '<button class="mname" type="button">' + b.label + '</button>' +
+    GRID.map(function(k){
+      return '<span class="mcell"><i class="mdot' +
+             (b.m.indexOf(k) >= 0 ? " in" : "") + '"></i></span>';
+    }).join("");
+  row.querySelector("button").addEventListener("click", function(){ select(b.id); });
+  matrix.appendChild(row);
+});
+
+/* how many of them are actually distinct */
+var sigs = {};
+BOUNDARIES.forEach(function(b){
+  var s = GRID.map(function(k){ return b.m.indexOf(k) >= 0 ? 1 : 0; }).join("");
+  (sigs[s] = sigs[s] || []).push(b.label);
+});
+var groups = Object.keys(sigs);
+var dupes = groups.filter(function(s){ return sigs[s].length > 1; });
+document.getElementById("m-aside").textContent =
+  BOUNDARIES.length + " definitions, " + groups.length + " distinct patterns";
+document.getElementById("m-dupe").innerHTML =
+  "The rows that do coincide are the interesting ones: " +
+  dupes.map(function(s){ return names2(sigs[s]); }).join("; ") +
+  " draw exactly the same line, and are not otherwise the same thing.";
+
+function names2(l){
+  if(l.length === 1) return l[0];
+  return l.slice(0,-1).join(", ") + " and " + l[l.length-1];
+}
+
+function draw(){
+  var A = find(current);
+
+  ORDER.forEach(function(key, i){
+    var el = els[key], lab = labs[key];
+    var inside = A.m.indexOf(key) >= 0;
+    el.style.setProperty("--d", (i * 42) + "ms");
+    lab.style.setProperty("--d", (i * 42) + "ms");
+    el.classList.remove("up","upB","upAB","setA","setB","setAB","out");
+    if(inside){ el.classList.add("up","setA"); }
+    else { el.classList.add("out"); }
+    lab.style.setProperty("--ll", inside ? "44px" : "0px");
+    lab.classList.toggle("on", inside);
+  });
+
+  var outs = ORDER.filter(function(k){ return A.m.indexOf(k) < 0; });
+  document.getElementById("f-count").textContent =
+    A.label + " \u2014 " + A.m.length + " of 9 territories";
+  document.getElementById("f-main").innerHTML =
+    '<span class="kind">' + A.kind + '</span><br>' + A.note;
+  document.getElementById("f-tally").innerHTML =
+    (outs.length ? names(outs) : "Nothing. This is the only boundary that covers every territory on the map.") +
+    "<span style=\"display:block;margin-top:10px;color:#8FA6AC\">" + A.basis + "</span>";
+}
+
+/* hover lift, bound to the painted land rather than the bounding box */
+var tip = document.createElement("div");
+tip.className = "tip";
+document.body.appendChild(tip);
+
+function memberships(key){
+  return BOUNDARIES.filter(function(b){ return b.m.indexOf(key) >= 0; }).length;
+}
+
+ORDER.forEach(function(key){
+  var el = els[key], face = tops[key];
+
+  function on(e){
+    el.classList.add("hot");
+    labs[key].classList.add("on");
+    tip.innerHTML = "<strong>" + T[key] + "</strong><span>In " + memberships(key) +
+      " of " + BOUNDARIES.length + " boundaries &middot; click for designations</span>";
+    tip.classList.add("on");
+    if(e && e.clientX) move(e);
+  }
+  function move(e){
+    tip.style.left = e.clientX + "px";
+    tip.style.top = e.clientY + "px";
+  }
+  function off(){
+    el.classList.remove("hot");
+    tip.classList.remove("on");
+    if(find(current).m.indexOf(key) < 0) labs[key].classList.remove("on");
+  }
+
+  face.addEventListener("mouseenter", on);
+  face.addEventListener("mousemove", move);
+  face.addEventListener("mouseleave", off);
+  el.addEventListener("focus", on);
+  el.addEventListener("blur", off);
+
+  function activate(){
+    var oSel = document.getElementById("origin");
+    if(oSel){
+      oSel.value = key;
+      oSel.dispatchEvent(new Event("change"));
+      document.getElementById("register").scrollIntoView({behavior:"smooth", block:"start"});
+    }
+  }
+  face.addEventListener("click", activate);
+  el.addEventListener("keydown", function(e){
+    if(e.key === "Enter" || e.key === " " || e.key === "Spacebar"){
+      e.preventDefault();
+      activate();
+    }
+  });
+});
+
+/* entrance */
+window.setTimeout(function(){
+  ORDER.forEach(function(key, i){
+    els[key].style.setProperty("--d", (i * 70) + "ms");
+    els[key].classList.remove("enter");
+  });
+  window.setTimeout(draw, 900);
+}, 180);
+draw();
+
+/* ---------- designation register ---------- */
+var CONTEXTS = [
+  { id:"oly", label:"Olympic Games", basis:"British Olympic Association, founded 1905",
+    port:"Void at the Commonwealth Games, where the delegation immediately fractures into eight.",
+    map:{
+      eng:["Team GB","Competes under a name that omits one constituent part of the state it represents."],
+      sco:["Team GB","Scotland exists at these Games only in the athlete's own answer to interviewers."],
+      wal:["Team GB","Wales is inside Great Britain, so this is one of the few uncontested rows on the form."],
+      nir:["Team GB or Team Ireland","A route to either exists, subject to citizenship and the sport\u0027s own eligibility and change-of-representation rules. The Olympic Charter lets any dual national elect; the Belfast Agreement is what makes the underlying citizenship choice explicit here.","Olympic Charter Rule 41; Belfast Agreement 1998"],
+      iom:["Team GB","Not in Great Britain. Not in the United Kingdom. On the coach regardless."],
+      jsy:["Team GB","A Crown Dependency competing as a country it is not part of."],
+      gsy:["Team GB","See Jersey. The Authority declines to distinguish, and Guernsey has noted this."],
+      gib:["Team GB","Roughly 1,700 km from Great Britain. No separate IOC-recognised National Olympic Committee exists."],
+      irl:["Team Ireland","A sovereign state, outside this Authority's jurisdiction, retained on the map for completeness."]
+    }},
+  { id:"cwg", label:"Commonwealth Games", basis:"Commonwealth Sport, formerly the Commonwealth Games Federation, and its member Commonwealth Games Associations",
+    port:"Team GB does not exist here. It reassembles afterwards without formality.",
+    map:{
+      eng:["England","One team becomes eight. This is the largest and the least remarked upon."],
+      sco:["Scotland","Own team, own flag, own anthem. Reverts to Team GB in two years."],
+      wal:["Wales","Own team. In cricket, the same athlete would be England."],
+      nir:["Northern Ireland","Athletes may represent Ireland or Great Britain internationally and Northern Ireland here, subject to the sport\u0027s own rules. In 2022 the international gymnastics federation ruled otherwise and barred three Northern Irish gymnasts from Birmingham, then reversed itself after political intervention."],
+      iom:["Isle of Man","Full member in its own right. Not a member of the United Kingdom."],
+      jsy:["Jersey","Full member. Population smaller than a modest English town."],
+      gsy:["Guernsey","Full member, separate from Jersey, which is the distinction the Channel Islands care most about."],
+      gib:["Gibraltar","Full member here, and a Team GB feeder at the Olympics."],
+      irl:["No entry","Ireland is not a Commonwealth member. The single unambiguous ruling on this map."]
+    }},
+  { id:"fut", label:"Football", basis:"FIFA statutes, Home Nations exemption of 1946",
+    port:"Four members inside one state. Unusual, though not unique: FIFA membership has never required sovereignty.",
+    map:{
+      eng:["England","One of four separate FIFA members in a single sovereign state."],
+      sco:["Scotland","Separate member, separate qualifying campaign, separate disappointment."],
+      wal:["Wales","Separate member. In cricket the same player is England."],
+      nir:["Northern Ireland, or Republic of Ireland by election","Players may declare for either. Some have appeared for both at youth level.","FIFA eligibility regulations; CAS 2010/A/2071, IFA v FAI, Kearns and FIFA; Belfast Agreement 1998"],
+      iom:["No FIFA member. Home Nations by ancestry","Not a FIFA member. Manx players enter the English pathway."],
+      jsy:["No FIFA member. Home Nations by ancestry","Jersey applied in 2015. The UEFA Congress refused it in February 2018, for not being an independent state."],
+      gsy:["No FIFA member. Home Nations by ancestry","Guernsey plays in the English league pyramid, which is the closest thing to a ruling available."],
+      gib:["Gibraltar","UEFA member since 2013, FIFA member since 2016. Its players are British citizens, which on its own confers no eligibility for England."],
+      irl:["Republic of Ireland","Separate member. Draws regularly on players born in England."]
+    }},
+  { id:"rgu", label:"Rugby union", basis:"World Rugby union boundaries, predating partition",
+    port:"The Lions select through the four Home Unions only. The rest of the map has no Lions side of its own.",
+    map:{
+      eng:["England","Also the international destination for Crown Dependency players; none of the three has a World Rugby member union of its own."],
+      sco:["Scotland","Separate union."],
+      wal:["Wales","Separate union. Wales exists fully here and not at all in cricket."],
+      nir:["Ireland","All-island union, unchanged by partition. Plays under a purpose-made flag and a purpose-made anthem."],
+      iom:["England pathway","The Manx Rugby Football Union governs the island, and is not a World Rugby member. Manx clubs sit in the English structure."],
+      jsy:["England pathway","Jersey Reds played in the English second tier until the club ceased trading in September 2023."],
+      gsy:["England pathway","See Jersey, which Guernsey would like recorded as a separate entry."],
+      gib:["Gibraltar","A Rugby Europe member in its own right, which the Crown Dependencies are not."],
+      irl:["Ireland","The same team as Northern Ireland. Two sovereign states, one XV."]
+    }},
+  { id:"crk", label:"Cricket", basis:"International Cricket Council membership",
+    port:"The Crown Dependencies have teams here and none at the Olympics.",
+    map:{
+      eng:["England","Governed by the England and Wales Cricket Board."],
+      sco:["Scotland","Associate member in its own right. Has beaten England."],
+      wal:["England","Wales is named in the board and not in the team. Glamorgan plays the English county circuit."],
+      nir:["Ireland","All-island Test nation. Cricket Ireland covers both jurisdictions."],
+      iom:["Isle of Man","An ICC member since 2004, associate since 2017, with no separate Olympic entry. An Olympic route would run through Great Britain, subject to GB Cricket eligibility."],
+      jsy:["Jersey","ICC member. Has an international cricket team while its football association is not a FIFA member."],
+      gsy:["Guernsey","ICC member, separately from Jersey, as everything involving these two must be."],
+      gib:["Gibraltar","ICC member. More international teams than Eurovision entries."],
+      irl:["Ireland","Full Test nation since 2017."]
+    }},
+  { id:"hoc", label:"Field hockey", basis:"FIH constituent associations, with Olympic amalgamation",
+    port:"Great Britain is assembled for the Olympics and, in some cycles, for other competition such as the FIH Pro League. England, Scotland and Wales also compete separately.",
+    map:{
+      eng:["England","England in world and European events. Great Britain at the Olympics."],
+      sco:["Scotland","Scotland ordinarily, Great Britain at the Olympics."],
+      wal:["Wales","Wales ordinarily, Great Britain at the Olympics."],
+      nir:["Ireland, or Great Britain at the Olympics","Plays all-island Ireland in world events and may be selected for Great Britain at the Games. Some players have done both."],
+      iom:["England pathway","No separate FIH member. Sits inside the England Hockey structure, which lists it among its counties."],
+      jsy:["England pathway","No separate FIH member. Sits inside the England Hockey structure, which lists it among its counties."],
+      gsy:["England pathway","No separate FIH member. Sits inside the England Hockey structure, which lists it among its counties."],
+      gib:["Gibraltar","Gibraltar Hockey is an FIH member in its own right, and has been in the European federation since 1969. Another sport in which it behaves nothing like the Crown Dependencies."],
+      irl:["Ireland","All-island. Does not amalgamate into Great Britain under any circumstances."]
+    }},
+  { id:"gry", label:"Golf, Ryder Cup", basis:"The Great Britain and Ireland side was expanded to include Continental Europe in 1979.",
+    port:"Eligibility is a matter of tour membership and the individual player, not of where the player is from.",
+    map:{
+      eng:["Team Europe","Britain is Europe here, while playing against Continental Europe in the Team Cup."],
+      sco:["Team Europe","The country that invented the sport fields no team in its largest event."],
+      wal:["Team Europe","Has hosted the event. Cannot enter it."],
+      nir:["Team Europe","The same team as the Republic of Ireland, England, Scotland and Wales."],
+      iom:["Team Europe","Europe, from a Crown Dependency that was never in the European Union."],
+      jsy:["Team Europe","Europe, from a Crown Dependency that was never in the European Union."],
+      gsy:["Team Europe","Europe, from a Crown Dependency that was never in the European Union."],
+      gib:["Team Europe","Was in the European Union, is now not, remains Europe for golf."],
+      irl:["Team Europe","Until 1979 this fixture was Great Britain and Ireland against the United States."]
+    }},
+  { id:"gwa", label:"Golf, Walker Cup", basis:"R and A agreement with the USGA, amateur competition",
+    port:"Here Britain is not Europe. Here Britain is Britain and Ireland.",
+    map:{
+      eng:["Great Britain and Ireland","One team spanning two sovereign states, playing the United States."],
+      sco:["Great Britain and Ireland","The same golfer is Team Europe in the Ryder Cup and GB and I here."],
+      wal:["Great Britain and Ireland","Covered by the title, for once, by way of Britain."],
+      nir:["Great Britain and Ireland","Covered by the Ireland half, not the Great Britain half, which is the distinction this Authority exists to enforce."],
+      iom:["Not separately stated","Territorial extent is not set out in the published selection criteria. Golf administration elsewhere treats Great Britain and Ireland as including the Isle of Man."],
+      jsy:["Not separately stated","As the Isle of Man. England Golf documentation treats Great Britain and Ireland as including the Channel Islands; the Walker Cup criteria do not say."],
+      gsy:["Not separately stated","As Jersey, and equally unstated."],
+      gib:["Not separately stated","Not addressed in the published criteria either way."],
+      irl:["Great Britain and Ireland","An independent state inside a British team title, by agreement, without objection."]
+    }},
+  { id:"pas", label:"Passport and nationality", basis:"British Nationality Act 1981",
+    port:"This describes the passport and nationality regime attached to the jurisdiction. It establishes nobody\u0027s individual entitlement, which turns on parentage, status and residence.",
+    map:{
+      eng:["British passport","Issued by the United Kingdom. The passport follows the citizenship, and the citizenship follows parentage and status rather than the map."],
+      sco:["British passport","Nationality is British. Nationality on the form the person fills in is often Scottish."],
+      wal:["British passport","The application can be made in Welsh. The nationality printed in the passport remains British."],
+      nir:["British passport, Irish passport, or both","The Agreement recognises the birthright of the people of Northern Ireland to identify and be accepted as British or Irish, or both, and to hold both citizenships. The only part of the map that works as drawn.","Belfast Agreement 1998"],
+      iom:["British passport","The Isle of Man is an issuing authority for British passports while not being in the United Kingdom."],
+      jsy:["British passport","Passports issued in Jersey are British passports. Jersey has its own parliament, its own laws, and no passport of its own."],
+      gsy:["British passport","As Jersey, which Guernsey continues to note is a separate place."],
+      gib:["British passport","Full British citizenship since 2002, from a place that is not part of the United Kingdom."],
+      irl:["Irish passport","Not treated as a foreign national in the United Kingdom for most purposes. Common Travel Area arrangements date from 1922. Irish citizenship by birth on the island has had parental conditions since 2005."]
+    }},
+  { id:"euv", label:"Eurovision", basis:"European Broadcasting Union membership",
+    port:"Determined by broadcaster rather than territory, which produces answers found nowhere else.",
+    map:{
+      eng:["United Kingdom","One entry for the whole state. No separate Home Nations."],
+      sco:["United Kingdom","No separate entry, unlike football, rugby, cricket and the Commonwealth Games."],
+      wal:["United Kingdom","No separate entry, despite two national broadcasters in two languages."],
+      nir:["United Kingdom","One entry for the whole state, so Northern Ireland is here with the rest of the United Kingdom rather than with Great Britain. The distinction is the entire point of this Authority."],
+      iom:["United Kingdom","No qualifying broadcaster of its own."],
+      jsy:["United Kingdom","No qualifying broadcaster of its own."],
+      gsy:["United Kingdom","No qualifying broadcaster of its own."],
+      gib:["No entry","Has a FIFA-recognised football team and no current entry in this contest."],
+      irl:["No entry in 2026","Last entered in 2025. Joint record holder with Sweden on seven wins. RTE withdrew from the 2026 contest and did not broadcast it."]
+    }},
+  { id:"rgl", label:"Rugby league", basis:"International Rugby League constitution",
+    port:"Great Britain exists here as an occasional touring side, revived and shelved.",
+    map:{
+      eng:["England","Its governing body also administers the Great Britain Rugby League Lions, a separate representative side, which last toured in 2019."],
+      sco:["Scotland","Separate nation. Draws heavily on players qualified by grandparent."],
+      wal:["Wales","Separate nation."],
+      nir:["Ireland","All-island, as in union."],
+      iom:["England pathway","No separate nation recorded."],
+      jsy:["England pathway","No separate nation recorded."],
+      gsy:["England pathway","No separate nation recorded."],
+      gib:["No standing","No membership recorded by this Authority."],
+      irl:["Ireland","Same team as Northern Ireland."]
+    }},
+  { id:"pub", label:"Being asked at a party", basis:"Custom. No written instrument.",
+    port:"Fully portable, entirely unenforceable, and the only ruling anyone actually applies.",
+    map:{
+      eng:["British","The one home nation that routinely answers with the larger unit, which is the source of most of this Authority's caseload."],
+      sco:["Scottish","Will not answer British. Has considered the question and declined."],
+      wal:["Welsh","Will not answer British either, and will note that Wales was absent from the 1707 title."],
+      nir:["Northern Irish, Irish, British, or 'from Norn Iron'","Selected per room, per company, and per how the question was asked."],
+      iom:["Manx","A British citizen who is not from the United Kingdom, and will explain the difference in full."],
+      jsy:["Jersey","Will specify Jersey rather than the Channel Islands, and rather than Britain."],
+      gsy:["Guernsey","Will specify Guernsey, and will specify that it is not Jersey."],
+      gib:["Gibraltarian","British, Spanish-speaking, and neither of those in the way the questioner expected."],
+      irl:["Irish","Emphatically not British. The most reliable ruling on this map."]
+    }}
+];
+
+var oSel = document.getElementById("origin"), cSel = document.getElementById("context"), count = 0;
+ORDER.forEach(function(k){
+  var o = document.createElement("option"); o.value = k; o.textContent = T[k]; oSel.appendChild(o);
+});
+CONTEXTS.forEach(function(c){
+  var o = document.createElement("option"); o.value = c.id; o.textContent = c.label; cSel.appendChild(o);
+});
+oSel.value = "nir"; cSel.value = "oly";
+
+function pad(n){ var s = String(n); while(s.length < 6) s = "0" + s; return s; }
+function ruling(){
+  var ctx = CONTEXTS.filter(function(c){ return c.id === cSel.value; })[0];
+  var r = ctx.map[oSel.value];
+  document.getElementById("m-ctx").textContent = ctx.label;
+  document.getElementById("m-org").textContent = T[oSel.value];
+  document.getElementById("verdict").textContent = r[0];
+  document.getElementById("note").textContent = r[1];
+  document.getElementById("basis").textContent = r[2] || ctx.basis;
+  document.getElementById("port").textContent = ctx.port;
+  count++;
+  document.getElementById("serial").textContent = "Ref. ADA-" + pad(count);
+}
+oSel.addEventListener("change", ruling);
+cSel.addEventListener("change", ruling);
+ruling();
+})();
+</script>
+</body>
+</html>

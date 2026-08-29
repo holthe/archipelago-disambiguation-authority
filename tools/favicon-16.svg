@@ -1,0 +1,15 @@
+<!-- Pixel-grid 16px icon for the smallest .ico entry. Islands collapse into
+     blocks at this size, so the mark keeps only what it is about: some land
+     inside the line, some outside it. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" shape-rendering="crispEdges">
+  <rect width="16" height="16" fill="#07161C"/>
+  <g fill="#FF7A5C">
+    <rect x="8" y="2" width="5" height="4"/>
+    <rect x="3" y="3" width="4" height="3"/>
+  </g>
+  <rect x="1" y="7" width="14" height="1" fill="#EFE6D3"/>
+  <g fill="#31444A">
+    <rect x="2" y="9" width="5" height="4"/>
+    <rect x="9" y="10" width="5" height="3"/>
+  </g>
+</svg>
