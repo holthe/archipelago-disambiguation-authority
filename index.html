@@ -841,6 +841,14 @@ function memberships(key){
   return BOUNDARIES.filter(function(b){ return b.m.indexOf(key) >= 0; }).length;
 }
 
+/* The tooltip is a hover affordance and touch has no hover. A tap fires a
+   synthetic mouseenter, so the tip opened, and no mouseleave ever followed,
+   so it stayed pinned at the tap position while the page scrolled away. It
+   is bound on fine pointers only; on touch the tap selects and scrolls,
+   which is the whole of the interaction. */
+var FINE = window.matchMedia ? window.matchMedia("(pointer: fine)").matches : true;
+var CALM = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)").matches : false;
+
 ORDER.forEach(function(key){
   var el = els[key], face = tops[key];
 
@@ -862,18 +870,23 @@ ORDER.forEach(function(key){
     if(find(current).m.indexOf(key) < 0) labs[key].classList.remove("on");
   }
 
-  face.addEventListener("mouseenter", on);
-  face.addEventListener("mousemove", move);
-  face.addEventListener("mouseleave", off);
-  el.addEventListener("focus", on);
-  el.addEventListener("blur", off);
+  if(FINE){
+    face.addEventListener("mouseenter", on);
+    face.addEventListener("mousemove", move);
+    face.addEventListener("mouseleave", off);
+    el.addEventListener("focus", on);
+    el.addEventListener("blur", off);
+  }
 
   function activate(){
+    off();                       /* nothing should travel with the scroll */
     var oSel = document.getElementById("origin");
     if(oSel){
       oSel.value = key;
       oSel.dispatchEvent(new Event("change"));
-      document.getElementById("register").scrollIntoView({behavior:"smooth", block:"start"});
+      document.getElementById("register").scrollIntoView({
+        behavior: CALM ? "auto" : "smooth", block: "start"
+      });
     }
   }
   face.addEventListener("click", activate);
